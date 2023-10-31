@@ -3,11 +3,9 @@ import itertools
 import lyricsgenius
 import pandas as pd
 
-# Your Genius API token
-token = 'KVwDIglrdj1dLgMzwTeVS_hyHEoDcsrGN_RsROWLJPS-E-5NefEhfFuJlYBcXy63'
+token = ""
 genius = lyricsgenius.Genius(token)
 
-# Function to search for lyrics for a given song and artist
 def search_lyrics(song_name, artist_name):
     try:
         search_query = f"{song_name} {artist_name}"
@@ -19,37 +17,28 @@ def search_lyrics(song_name, artist_name):
     except Exception as e:
         return None
 
-# CSV file containing unique song names and artist names
 df = pd.read_csv("../Data/track_characteristics.csv", nrows=30)
 
-# Convert the DataFrame to a list of lists
 data = df.values.tolist()
 
-# The first row (header) is not included in the 'data', so if you need it:
 header = df.columns.tolist()
 
-# Create lists to store found lyrics and songs not found
 lyrics_found = []
 songs_not_found = []
 
-# Read song names and artist names from the CSV file
-# Skip the header row if it exists
 for row in data:
-    if len(row) >= 2:  # Ensure the row has at least 2 columns
-        artist_name = row[9]  # Assuming the artist names are in the first column
-        song_name = row[4]  # Assuming the song names are in the second column
+    if len(row) >= 2:  
+        artist_name = row[9]  
+        song_name = row[4]  
         
-            # Flag to track whether lyrics were found
         lyrics_found_flag = False
 
-            # Search with the original artist and song names
         lyrics = search_lyrics(song_name, artist_name)
             
         if lyrics is not None:
             lyrics_found.append([song_name, artist_name, lyrics])
             lyrics_found_flag = True
 
-            # If lyrics were still not found, add to "songs_not_found" list
         if not lyrics_found_flag:
             songs_not_found.append([song_name, artist_name])
 

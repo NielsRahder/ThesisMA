@@ -17,7 +17,6 @@ tokenized_data <- data %>%
 # Remove stopwords
 stopwords_df <- tibble(word = stopwords("en"))
 
-# Create dataset with own stopwords
 personal_stopwords <- tibble(
   word = c('chorus', 'chris', 'martin')
 )
@@ -30,7 +29,6 @@ all_stop_words <-
 tokenized_data <- tokenized_data %>%
   filter(!token %in% all_stop_words$word)
 
-# Group by Artist and Title to reassemble the cleaned lyrics
 cleaned_data <- tokenized_data %>%
   group_by(Artist, Title) %>%
   summarise(cleaned_lyric = paste(token, collapse = " "))
@@ -38,7 +36,6 @@ cleaned_data <- tokenized_data %>%
 # Sentiment analysis using VADER on cleaned_lyric
 vader_data <- vader_df(cleaned_data$cleaned_lyric)
 
-# Combine with the original Artist and Title info
 vader_data <- data.frame(Artist = cleaned_data$Artist, 
                          Title = cleaned_data$Title, 
                          vader_data)

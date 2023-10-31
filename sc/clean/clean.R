@@ -16,16 +16,6 @@ data_unique <- data %>%
 data_unique$release_dates <- as.Date(data_unique$release_dates, format="%Y-%m-%d") # adjust format as needed
 data_unique$year <- as.numeric(format(data_unique$release_dates, "%Y"))
 
-
-
-
-
-
-
-
-
-
-
 #calculate the mean popularity of songs
 result <- data %>%
   filter(treated == "0") %>%
@@ -54,7 +44,6 @@ track_379268_info <- data %>%
   filter(track_id == 379268)
 print(track_379268_info)
 
-
 #write unique values to csv
 unique_artist_names <- unique(data$artist_names)
 unique_artist_names <- as.data.frame(unique_artist_names)
@@ -65,38 +54,16 @@ unique_names <- as.data.frame(unique_names)
 nrow(unique_artist_names)
 nrow(unique_names)
 
-# Create a data frame with unique values
 unique_data <- data.frame(artist_names = unique_artist_names, name = unique_names)
 
 # Write the unique data to a CSV file
 write.csv(unique_data, file = "unique_values.csv", row.names = FALSE)
 
-
-
-# Assuming your dataset is named 'data'
-# Replace 'artist_name' and 'name' with the actual column names in your dataset
-
-
-
-
-
-
-
-
-
-
-# Load the required libraries
-library(dplyr)
-
-# Assuming 'data' is your dataset with columns $artist_names and $name
 # Create a new data frame with unique artist names and their songs
 unique_data <- data %>%
   distinct(artist_names, name)
 
-# Write the data frame to a CSV file
 write.csv(unique_data, file = "../Data/unique_artists_and_songs.csv", row.names = FALSE)
-
-
 
 lyrics <- read.csv("lyrics.csv")
 not_found <- read.csv("songs_not_found.csv")

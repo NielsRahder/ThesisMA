@@ -30,7 +30,6 @@ all_stop_words <-
   stopwords_df %>%
   bind_rows(personal_stopwords)
 
-# Filter out stopwords
 tokenized_data <- tokenized_data %>%
   filter(!token %in% all_stop_words$word)
 
@@ -39,11 +38,9 @@ CompressionScore <- function(lyric_data) {
   unique_tokens <- n_distinct(lyric_data$token)
   total_tokens <- nrow(lyric_data)
   
-  # Return the compression score
   return(1 - unique_tokens / total_tokens)
 }
 
-# Compute compression scores for each song lyric
 compression_scores <- tokenized_data %>%
   group_by(Artist, Title) %>%
   do(score = CompressionScore(.))
