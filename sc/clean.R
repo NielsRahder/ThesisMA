@@ -1,15 +1,30 @@
 library(tidyr)
 library(dplyr)
 
-data <- read.csv("~/Documents/MMMA/MA/Thesis_23/Analysis/Data/data_long_prepped.csv", nrows = 1500)
+data <- read.csv("~/Documents/MMMA/MA/Thesis_23/Analysis/Data/data_long_prepped.csv", nrows = 500)
 data <- as.data.frame(data)
-data
+View(data)
 
 # Iterate through all columns and replace empty cells with NA
-data <- lapply(data, function(x) {
-  x[x == ""] <- NA
-  return(x)
-})
+data[data == ""] <- NA
+
+#create dataframe with unique values: 
+data_unique <- data %>% 
+  distinct(artist_names, name, .keep_all = TRUE)  # Make sure to replace 'artist' and 'song_title' with your actual column names
+
+#add a year column
+data_unique$release_dates <- as.Date(data_unique$release_dates, format="%Y-%m-%d") # adjust format as needed
+data_unique$year <- as.numeric(format(data_unique$release_dates, "%Y"))
+
+
+
+
+
+
+
+
+
+
 
 #calculate the mean popularity of songs
 result <- data %>%
@@ -79,8 +94,12 @@ unique_data <- data %>%
   distinct(artist_names, name)
 
 # Write the data frame to a CSV file
-write.csv(unique_data, file = "unique_artists_and_songs.csv", row.names = FALSE)
+write.csv(unique_data, file = "../Data/unique_artists_and_songs.csv", row.names = FALSE)
 
 
 
-
+lyrics <- read.csv("lyrics.csv")
+not_found <- read.csv("songs_not_found.csv")
+nrow(lyrics)
+nrow(not_found)
+nrow(unique_data)
