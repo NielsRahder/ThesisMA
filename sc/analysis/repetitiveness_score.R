@@ -1,51 +1,19 @@
-library(tidytext)
-library(dplyr)
-library(stringr)
+data <- read.csv("../../Data/ColdPlay.csv", nrow = 10)
 
-# Load and clean data
-data <- read.csv("../Data/ColdPlay.csv", nrow = 10)
-
-data <- data %>%
-  select(Artist, 
-         Title, 
-         Lyric)
-
-# Lowercase everything
-data <- data %>%
-  mutate(Lyric = tolower(Lyric))
-
-# Tokenization
-tokenized_data <- data %>%
-  unnest_tokens(output = token, input = Lyric)
-
-# Remove stopwords
-stopwords_df <- tibble(word = stopwords("en"))
-
-# Create dataset with own stopwords
-personal_stopwords <- tibble(
-  word = c('chorus', 'chris')
-)
-
-all_stop_words <- 
-  stopwords_df %>%
-  bind_rows(personal_stopwords)
-
-tokenized_data <- tokenized_data %>%
-  filter(!token %in% all_stop_words$word)
-
-# Function to compute compression score
-CompressionScore <- function(lyric_data) {
-  unique_tokens <- n_distinct(lyric_data$token)
-  total_tokens <- nrow(lyric_data)
-  
-  return(1 - unique_tokens / total_tokens)
+compress_and_calculate_size <- function(raw_string) {
+  raw_data <- charToRaw(raw_string)
+  compressed_data <- memCompress(raw_data, "gzip")
+  compressed_size <- length(compressed_data)
+  original_size <- length(raw_data)
+  return(list(compressed_size = compressed_size, original_size = original_size))
 }
 
-compression_scores <- tokenized_data %>%
-  group_by(Artist, Title) %>%
-  do(score = CompressionScore(.))
+data$reduction_score <- sapply(data$Lyric, function(lyric) {
+  size_info <- compress_and_calculate_size(lyric)
+  reduction_percentage <- (1 - (size_info$compressed_size / size_info$original_size)) * 100
+  return(reduction_percentage)
+})
 
-# Combine the compression scores with the original dataset
-final_data <- left_join(data, compression_scores, by = c("Artist", "Title"))
+write.csv(data, "../../Data/ColdPlay_WithReduction.csv", row.names = FALSE)
 
-View(final_data)
+
