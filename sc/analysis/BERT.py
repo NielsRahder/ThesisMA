@@ -26,3 +26,4 @@ df['sentiment'] = df['Lyric'].apply(get_sentiment)
 
 # Save the modified DataFrame to a new CSV
 df.to_csv('../Data/ColdPlay_with_Sentiment.csv', index=False)
+

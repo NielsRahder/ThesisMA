@@ -1,10 +1,13 @@
 import csv
-import itertools
 import lyricsgenius
 import pandas as pd
+import time
 
-token = ""
-genius = lyricsgenius.Genius(token)
+# Record the start time
+start_time = time.time()
+
+token = "bBOHnPYLSJkn-q3hibku1NkZmlS7X1xq3s8odqSoIgSuCjb2IiLCg4LoTrc0KHKED0h0mh6JKNFE4DdWwn1MuQ"
+genius = lyricsgenius.Genius(token, verbose=True)
 
 def search_lyrics(song_name, artist_name):
     try:
@@ -17,10 +20,10 @@ def search_lyrics(song_name, artist_name):
     except Exception as e:
         return None
 
-df = pd.read_csv("../Data/track_characteristics.csv", nrows=30)
+df = pd.read_csv("../Data/track_characteristics.csv", nrows=10)
 
+print(df.iloc[:, 8].head())
 data = df.values.tolist()
-
 header = df.columns.tolist()
 
 lyrics_found = []
@@ -55,3 +58,10 @@ if songs_not_found:
         writer = csv.writer(not_found_file)
         writer.writerow(['Song Name', 'Artist Name'])
         writer.writerows(songs_not_found)
+
+print(len(lyrics_found))
+end_time = time.time()
+
+# Calculate the difference
+elapsed_time = end_time - start_time
+print(f"The script took {elapsed_time} seconds to complete.")

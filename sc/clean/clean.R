@@ -1,12 +1,25 @@
 library(tidyr)
 library(dplyr)
 
-data <- read.csv("~/Documents/MMMA/MA/Thesis_23/Analysis/Data/data_long_prepped.csv", nrows = 500)
+data <- read.csv("~/Documents/MMMA/MA/Thesis_23/ThesisMA/Data/data_long_prepped.csv", nrows = 500)
 data <- as.data.frame(data)
 View(data)
 
 # Iterate through all columns and replace empty cells with NA
 data[data == ""] <- NA
+
+#calculate the absolute change in playlist inclusion
+data <- data %>%
+  group_by(track_id) %>%
+  mutate(
+    max_inclusions = max(n_playlist_inclusion),
+    min_inclusions = min(n_playlist_inclusion)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    absolute_change = abs(max_inclusions - min_inclusions)
+  ) %>%
+  select(-max_inclusions, -min_inclusions) 
 
 #create dataframe with unique values: 
 data_unique <- data %>% 
