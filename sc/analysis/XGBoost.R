@@ -38,7 +38,6 @@ xgb_grid <- expand.grid(
 )
 
 # Run the model tuning
-set.seed(123) # For reproducibility
 xgb_tuned_model <- train(
   n_playlist_inclusion ~ .,
   data = data_model,
@@ -48,7 +47,6 @@ xgb_tuned_model <- train(
   metric = "RMSE"
 )
 
-# Retrieve the best parameters
 best_params <- xgb_tuned_model$bestTune
 
 set.seed(123)
@@ -59,9 +57,8 @@ xgb_final_model <- train(
   data = data_model,
   method = "xgbTree",
   trControl = train_control,
-  tuneGrid = best_params, # Here we use the best parameters directly
+  tuneGrid = best_params, 
   metric = "RMSE"
 )
 
-# Output the final model results
 print(xgb_final_model)
