@@ -6,7 +6,7 @@ import time
 # Record the start time
 start_time = time.time()
 
-token = "bBOHnPYLSJkn-q3hibku1NkZmlS7X1xq3s8odqSoIgSuCjb2IiLCg4LoTrc0KHKED0h0mh6JKNFE4DdWwn1MuQ"
+token = "" #retracted token 
 genius = lyricsgenius.Genius(token, verbose=True)
 
 def search_lyrics(song_name, artist_name):
